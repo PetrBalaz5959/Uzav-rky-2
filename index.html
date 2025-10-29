@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>US Earnings (Yahoo Finance)</title>
+<title>US Earnings Calendar (FinancialModelingPrep)</title>
 <style>
   body {
     background-color: #0f1116;
@@ -30,7 +30,7 @@
     outline: none;
     font-size: 14px;
   }
-  input[type="date"] {
+  input[type="date"], input[type="text"] {
     background-color: #1c1f26;
     color: #fff;
   }
@@ -72,9 +72,12 @@
 </head>
 <body>
 
-<h2>📊 US Earnings (Yahoo Finance)</h2>
+<h2>📊 US Earnings Calendar (FinancialModelingPrep)</h2>
 
 <div class="filters">
+  <div>
+    <label>API klíč: <input type="text" id="apiKey" placeholder="Zadej svůj API klíč"></label>
+  </div>
   <div>
     <label>Od: <input type="date" id="fromDate" value="2025-11-03"></label>
   </div>
@@ -96,70 +99,51 @@
   <tbody></tbody>
 </table>
 
-<div id="status">Zadej rozsah a klikni na „Načíst data“</div>
+<div id="status">Zadej API klíč a rozsah, poté klikni na „Načíst data“</div>
 
 <script>
-async function fetchEarningsForDay(dateStr) {
-  const url = `https://api.allorigins.win/raw?url=https://query2.finance.yahoo.com/v1/finance/calendar/earnings?day=${dateStr}`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Chyba při načítání");
-    const data = await res.json();
-    const list = data.finance?.result || [];
-    return list.map(e => ({
-      ticker: e.symbol,
-      name: e.companyshortname,
-      date: e.startdatetime ? e.startdatetime.split("T")[0] : dateStr,
-      session: e.time?.includes("After") ? "AMC" : e.time?.includes("Before") ? "BMO" : "-"
-    }));
-  } catch (err) {
-    console.warn("Chyba pro den:", dateStr, err);
-    return [];
-  }
-}
-
-function getDateRange(start, end) {
-  const arr = [];
-  let d = new Date(start);
-  while (d <= new Date(end)) {
-    arr.push(d.toISOString().split("T")[0]);
-    d.setDate(d.getDate() + 1);
-  }
-  return arr;
-}
-
 document.getElementById("loadBtn").addEventListener("click", async () => {
+  const apiKey = document.getElementById("apiKey").value.trim();
   const from = document.getElementById("fromDate").value;
   const to = document.getElementById("toDate").value;
   const tbody = document.querySelector("#earningsTable tbody");
   tbody.innerHTML = "";
-  document.getElementById("status").innerText = "⏳ Načítám data...";
-  
-  const days = getDateRange(from, to);
-  let all = [];
 
-  for (const day of days) {
-    const results = await fetchEarningsForDay(day);
-    all = all.concat(results);
-  }
-
-  if (all.length === 0) {
-    document.getElementById("status").innerText = "❌ Žádná data nenalezena v daném rozsahu.";
+  if (!apiKey) {
+    document.getElementById("status").innerText = "❗ Zadej prosím svůj API klíč.";
     return;
   }
 
-  all.forEach(item => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.ticker || "-"}</td>
-      <td>${item.name || "-"}</td>
-      <td>${item.date}</td>
-      <td>${item.session}</td>
-    `;
-    tbody.appendChild(tr);
-  });
+  document.getElementById("status").innerText = "⏳ Načítám data z FMP...";
 
-  document.getElementById("status").innerText = `✅ Načteno ${all.length} titulů`;
+  const url = `https://financialmodelingprep.com/api/v3/earning_calendar?from=${from}&to=${to}&apikey=${apiKey}`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Chyba při načítání dat");
+    const data = await res.json();
+
+    if (!Array.isArray(data) || data.length === 0) {
+      document.getElementById("status").innerText = "❌ Žádná data nenalezena.";
+      return;
+    }
+
+    data.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${item.symbol || "-"}</td>
+        <td>${item.company || "-"}</td>
+        <td>${item.date || "-"}</td>
+        <td>${item.time?.toUpperCase() || "-"}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById("status").innerText = `✅ Načteno ${data.length} firem.`;
+  } catch (err) {
+    console.error(err);
+    document.getElementById("status").innerText = "❌ Chyba při načítání dat.";
+  }
 });
 </script>
 

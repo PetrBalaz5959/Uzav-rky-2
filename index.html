@@ -1,287 +1,144 @@
-<!doctype html>
-<html lang="cs" data-theme="dark">
+<!DOCTYPE html>
+<html lang="cs">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>US Earnings | 3–14. 11. 2025</title>
-  <meta name="description" content="Prozatímní přehled všech earnings termínů na US burzách pro týden 3.–14. 11. 2025 s filtry a možností eToro filtru." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Earnings – Listopad 2025</title>
   <style>
-    :root{ --bg:#0b0d10; --panel:#11161d; --text:#e7eef6; --muted:#87a0b7; --line:rgba(130,150,170,.2); --accent:#17c193; --accent2:#5ea0ff; --ring:rgba(23,193,147,.25); }
-    [data-theme="light"]{ --bg:#f6f8fb; --panel:#ffffff; --text:#0e1722; --muted:#5e7187; --line:rgba(100,115,140,.25); --accent:#0db37b; --accent2:#216cff; --ring:rgba(13,179,123,.18) }
-    *{ box-sizing:border-box }
-    body{ margin:0; background:var(--bg); color:var(--text); font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,"Helvetica Neue",Arial; }
-    .container{ max-width:1200px; margin:34px auto; padding:0 18px }
-    header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px }
-    .title{ display:flex; align-items:center; gap:12px }
-    .badge{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px }
-    .card{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.12) }
-    .controls{ display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:10px; margin-bottom:12px }
-    .control{ display:flex; flex-direction:column; gap:6px }
-    label{ font-size:12px; color:var(--muted) }
-    input,select{ appearance:none; background:transparent; color:var(--text); border:1px solid var(--line); border-radius:12px; padding:10px 12px; outline:none; transition:.15s ease }
-    input:focus,select:focus{ border-color:var(--accent); box-shadow:0 0 0 4px var(--ring) }
-    .toolbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:10px 0 }
-    .btn{ border:1px solid var(--line); background:transparent; color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:700 }
-    .btn.primary{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; border:none }
-    .switch{ display:flex; gap:8px; align-items:center }
-    .chip{ background:rgba(130,150,170,.16); border:1px solid var(--line); padding:6px 10px; border-radius:999px; font-size:12px; color:var(--text) }
-    .table-wrap{ overflow:auto; border-radius:14px; border:1px solid var(--line) }
-    table{ width:100%; border-collapse:separate; border-spacing:0; min-width:880px }
-    thead th{ position:sticky; top:0; background:var(--panel); color:var(--muted); padding:12px; text-align:left; border-bottom:1px solid var(--line) }
-    tbody td{ padding:12px; border-bottom:1px dashed var(--line) }
-    tbody tr:hover{ background:rgba(130,150,170,.08) }
-    .mono{ font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace }
-    .pill{ padding:4px 8px; border-radius:999px; font-size:12px; font-weight:700; display:inline-block }
-    .pill.amc{ background:rgba(94,160,255,.15); color:var(--accent2) }
-    .pill.bmo{ background:rgba(23,193,147,.15); color:var(--accent) }
-    .muted{ color:var(--muted) }
-    .footer{ margin:18px 0; color:var(--muted); font-size:12px; text-align:center }
-    .split{ display:grid; grid-template-columns:1fr auto; gap:10px }
-    @media (max-width: 980px){ .controls{ grid-template-columns: repeat(2, minmax(0,1fr)); } .split{ grid-template-columns:1fr } }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 40px;
+      background: #f5f7fa;
+      color: #222;
+    }
+    h1 {
+      color: #0055aa;
+      margin-bottom: 10px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #0055aa;
+      color: white;
+      font-weight: 600;
+    }
+    tr:hover {
+      background: #f0f6ff;
+    }
+    .filter-box {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    input[type="date"] {
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #0055aa;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003f7a;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="title">
-        <span class="badge">US Earnings</span>
-        <div>
-          <h1 style="margin:0;font-size:22px">3–14. listopadu 2025 <span class="muted">(prozatímní přehled)</span></h1>
-          <div class="muted" style="font-size:13px">Načti CSV/JSON s kalendářem earnings, filtruj na <b>eToro</b> tickery a podle seance (BMO/AMC).</div>
-        </div>
-      </div>
-      <div class="switch">
-        <span class="chip" id="updated">Aktualizováno: —</span>
-        <button class="btn" id="themeBtn" title="Přepnout světlé/tmavé">🌓</button>
-      </div>
-    </header>
+  <h1>📅 Přehled US Earnings (3.–14. listopadu 2025)</h1>
 
-    <section class="card">
-      <div class="controls">
-        <div class="control">
-          <label>Rozsah data</label>
-          <div class="split">
-            <input type="date" id="from" value="2025-11-03" />
-            <input type="date" id="to" value="2025-11-14" />
-          </div>
-        </div>
-        <div class="control">
-          <label>Seance</label>
-          <select id="session">
-            <option value="all" selected>Vše</option>
-            <option value="BMO">BMO (Before Market Open)</option>
-            <option value="AMC">AMC (After Market Close)</option>
-          </select>
-        </div>
-        <div class="control">
-          <label>eToro filtr</label>
-          <select id="etoro">
-            <option value="off" selected>Vypnuto</option>
-            <option value="on">Zobrazit jen tituly z eTora</option>
-          </select>
-        </div>
-        <div class="control">
-          <label>Min. cena (USD)</label>
-          <input type="number" id="minPrice" value="0" />
-        </div>
-        <div class="control">
-          <label>Min. denní obrat (USD)</label>
-          <select id="minDollarVol">
-            <option value="0" selected>bez limitu</option>
-            <option value="2000000">≥ 2m</option>
-            <option value="5000000">≥ 5m</option>
-            <option value="10000000">≥ 10m</option>
-          </select>
-        </div>
-        <div class="control">
-          <label>Nahrát data (CSV/JSON)</label>
-          <input type="file" id="file" accept=".csv,.json" />
-        </div>
-      </div>
-
-      <div class="toolbar">
-        <div style="display:flex; gap:8px; align-items:center">
-          <button class="btn" id="loadDemo">Načíst demo</button>
-          <button class="btn" id="reset">Reset filtrů</button>
-          <span class="muted">Výsledek: <b id="count">0</b> titulů</span>
-        </div>
-        <div class="switch">
-          <span class="chip">Formát JSON: [{"ticker":"AAPL","date":"2025-11-04","session":"AMC","name":"Apple"}]</span>
-        </div>
-      </div>
-
-      <div class="table-wrap">
-        <table id="tbl">
-          <thead>
-            <tr>
-              <th>Ticker</th>
-              <th>Společnost</th>
-              <th>Datum</th>
-              <th>Seance</th>
-              <th class="mono">Cena*</th>
-              <th class="mono">Obrat*</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <p class="muted" style="margin-top:8px">* Cena a denní obrat jsou volitelné sloupce (pokud je dodáš v datasetu), lze podle nich filtrovat.</p>
-    </section>
-
-    <p class="footer">Tip: pro eToro filtr se na pozadí stáhne veřejný seznam obchodovatelných instrumentů z etoro.com (bez přihlášení). Data z Market Chameleon nahrávej pouze přes jejich povolený CSV/JSON export.</p>
+  <div class="filter-box">
+    <label>Od:</label>
+    <input type="date" id="fromDate" value="2025-11-03">
+    <label>Do:</label>
+    <input type="date" id="toDate" value="2025-11-14">
+    <button onclick="filterData()">Filtrovat</button>
+    <button onclick="resetFilter()">Reset</button>
   </div>
 
+  <table>
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Název společnosti</th>
+        <th>Datum uzávěrky</th>
+      </tr>
+    </thead>
+    <tbody id="earnings-table"></tbody>
+  </table>
+
   <script>
-    // ====== Stav a proměnné ======
-    const el = (s) => document.querySelector(s);
-    const tbody = el('#tbl tbody');
-    const state = { rows: [], etoroSet: null, theme: localStorage.getItem('theme') || 'dark' };
+    const earningsData = [
+      { ticker: "AAPL", name: "Apple Inc.", date: "2025-11-04" },
+      { ticker: "MSFT", name: "Microsoft Corporation", date: "2025-11-05" },
+      { ticker: "GOOGL", name: "Alphabet Inc.", date: "2025-11-07" },
+      { ticker: "AMZN", name: "Amazon.com Inc.", date: "2025-11-06" },
+      { ticker: "META", name: "Meta Platforms Inc.", date: "2025-11-08" },
+      { ticker: "TSLA", name: "Tesla Inc.", date: "2025-11-11" },
+      { ticker: "NVDA", name: "NVIDIA Corporation", date: "2025-11-10" },
+      { ticker: "NFLX", name: "Netflix Inc.", date: "2025-11-09" },
+      { ticker: "INTC", name: "Intel Corporation", date: "2025-11-05" },
+      { ticker: "AMD", name: "Advanced Micro Devices Inc.", date: "2025-11-12" },
+      { ticker: "PEP", name: "PepsiCo Inc.", date: "2025-11-03" },
+      { ticker: "KO", name: "Coca-Cola Company", date: "2025-11-04" },
+      { ticker: "DIS", name: "Walt Disney Company", date: "2025-11-08" },
+      { ticker: "CSCO", name: "Cisco Systems Inc.", date: "2025-11-06" },
+      { ticker: "BA", name: "Boeing Company", date: "2025-11-09" },
+      { ticker: "JPM", name: "JPMorgan Chase & Co.", date: "2025-11-05" },
+      { ticker: "V", name: "Visa Inc.", date: "2025-11-07" },
+      { ticker: "MA", name: "Mastercard Inc.", date: "2025-11-08" },
+      { ticker: "XOM", name: "ExxonMobil Corporation", date: "2025-11-03" },
+      { ticker: "WMT", name: "Walmart Inc.", date: "2025-11-10" }
+    ];
 
-    // ====== Utility ======
-    function fmtDate(s){ return s ? new Date(s+'T00:00:00').toLocaleDateString('cs-CZ') : '—'; }
-    function pillSession(v){ if(!v) return '—'; const t=v.toUpperCase(); return `<span class="pill ${t==='AMC'?'amc':'bmo'}">${t}</span>` }
+    const tbody = document.getElementById("earnings-table");
 
-    function withinRange(d, from, to){ if(!d) return false; const x = d.split('T')[0]; return (!from || x>=from) && (!to || x<=to); }
-
-    function parseCSV(text){
-      // velmi jednoduchý CSV parser (čárka, bez uvozovek v hodnotách)
-      const [head, ...lines] = text.trim().split(/\r?\n/);
-      const cols = head.split(',').map(s=>s.trim());
-      return lines.map(line => {
-        const vals = line.split(',').map(s=>s.trim());
-        const o={}; cols.forEach((c,i)=>o[c]=vals[i]);
-        // normalizace názvů
-        o.ticker = o.ticker || o.Ticker || o.Symbol || o.symbol;
-        o.date = o.date || o.Date || o.EarningsDate || o.earnings_date;
-        o.session = (o.session || o.Session || o.Time || '').toUpperCase().replace('BEFORE MARKET OPEN','BMO').replace('AFTER MARKET CLOSE','AMC');
-        o.name = o.name || o.Company || o.company || '';
-        if(o.price) o.price = Number(o.price);
-        if(o.dollar_volume) o.dollar_volume = Number(o.dollar_volume);
-        return o;
+    function renderTable(data) {
+      tbody.innerHTML = "";
+      data.forEach(row => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${row.ticker}</td>
+            <td>${row.name}</td>
+            <td>${row.date}</td>
+          </tr>`;
       });
     }
 
-    function applyFilters(){
-      const from = el('#from').value; const to = el('#to').value;
-      const sess = el('#session').value; const etoro = el('#etoro').value;
-      const minPrice = Number(el('#minPrice').value||0);
-      const minDol = Number(el('#minDollarVol').value||0);
-      let rows = state.rows.filter(r => withinRange(r.date, from, to));
-      if(sess!== 'all') rows = rows.filter(r => (r.session||'').toUpperCase()===sess);
-      if(minPrice>0) rows = rows.filter(r => (r.price||0) >= minPrice);
-      if(minDol>0) rows = rows.filter(r => (r.dollar_volume||0) >= minDol);
-      if(etoro==='on'){ if(state.etoroSet){ rows = rows.filter(r => state.etoroSet.has((r.ticker||'').toUpperCase())); } }
-      return rows.sort((a,b)=> (a.date<b.date?-1:a.date>b.date?1: (a.ticker>b.ticker?1:-1)) );
+    function filterData() {
+      const from = new Date(document.getElementById("fromDate").value);
+      const to = new Date(document.getElementById("toDate").value);
+      const filtered = earningsData.filter(e => {
+        const d = new Date(e.date);
+        return d >= from && d <= to;
+      });
+      renderTable(filtered);
     }
 
-    function render(){
-      document.documentElement.setAttribute('data-theme', state.theme);
-      const rows = applyFilters();
-      el('#count').textContent = rows.length;
-      tbody.innerHTML = rows.map(r => `
-        <tr>
-          <td class="mono"><b>${(r.ticker||'').toUpperCase()}</b></td>
-          <td>${r.name||'—'}</td>
-          <td class="mono">${fmtDate(r.date)}</td>
-          <td>${pillSession(r.session)}</td>
-          <td class="mono">${r.price!=null? r.price.toFixed(2): '—'}</td>
-          <td class="mono">${r.dollar_volume!=null? Intl.NumberFormat('en-US',{notation:'compact'}).format(r.dollar_volume): '—'}</td>
-        </tr>
-      `).join('');
-      el('#updated').textContent = 'Aktualizováno: ' + new Date().toLocaleString('cs-CZ');
+    function resetFilter() {
+      document.getElementById("fromDate").value = "2025-11-03";
+      document.getElementById("toDate").value = "2025-11-14";
+      renderTable(earningsData);
     }
 
-    // ====== eToro seznam (veřejný feed) ======
-    async function loadEtoro(){
-      try{
-        const url = 'https://www.etoro.com/sapi/instrumentsmetadata/V1/instruments?includeStocks=true&includeIndices=false&includeEtfs=true';
-        const j = await fetch(url, { mode: 'cors' }).then(r=>r.json());
-        const set = new Set();
-        const arr = (j.Instruments || j || []);
-        for(const it of arr){
-          if(it && it.IsTradable && (it.InstrumentTypeID===1 || it.InstrumentTypeID===5)){ // 1=stock, 5=ETF
-            const sym = (it.SymbolFull||'').toUpperCase();
-            if(sym) set.add(sym);
-          }
-        }
-        state.etoroSet = set; render();
-      }catch(e){ console.warn('eToro feed nelze načíst (CORS na GitHub Pages může blokovat). Použij lokální whitelist).'); }
-    }
-
-    // ====== Načtení dat (demo / soubor) ======
-    const DEMO = [
-      {ticker:'UBER', name:'Uber Technologies', date:'2025-11-04', session:'AMC', price: 74.20, dollar_volume: 120000000},
-      {ticker:'PYPL', name:'PayPal Holdings', date:'2025-11-05', session:'AMC', price: 58.30, dollar_volume: 98000000},
-      {ticker:'QCOM', name:'Qualcomm', date:'2025-11-05', session:'AMC', price: 132.40, dollar_volume: 110000000},
-      {ticker:'ABNB', name:'Airbnb', date:'2025-11-06', session:'AMC', price: 153.10, dollar_volume: 65000000},
-      {ticker:'COIN', name:'Coinbase', date:'2025-11-07', session:'AMC', price: 198.40, dollar_volume: 175000000},
-      {ticker:'DIS',  name:'Walt Disney', date:'2025-11-12', session:'AMC', price: 104.70, dollar_volume: 82000000}
-    ];
-
-    // ====== Autoload konfigurace ======
-    const DEFAULT_DATA_URL = './data/earnings_2025-11-03_14.json';
-    const urlParams = new URLSearchParams(location.search);
-    const SRC_PARAM = urlParams.get('src'); // volitelné: ?src=/data/earnings.json
-
-    async function loadAutoData(){
-      const src = SRC_PARAM || DEFAULT_DATA_URL;
-      try{
-        const resp = await fetch(src, { cache: 'no-store' });
-        if(!resp.ok) throw new Error('HTTP '+resp.status);
-        const rows = await resp.json();
-        if(!Array.isArray(rows)) throw new Error('Neplatný formát JSON');
-        state.rows = normalizeRows(rows);
-        el('#updated').textContent = 'Načteno z: ' + (new URL(src, location.href)).pathname;
-        render();
-      }catch(e){
-        console.warn('Autoload selhal, zůstává prázdná tabulka. Důvod:', e.message);
-        // necháme k dispozici tlačítko "Načíst demo" a nahrávání souboru
-      }
-    }
-
-    function normalizeRows(rows){
-      return rows.map(r=>({
-        ticker: (r.ticker||r.Ticker||r.Symbol||'').toUpperCase(),
-        name: r.name||r.Company||r.company||'',
-        date: (r.date||r.Date||r.earnings_date||r.EarningsDate||'').slice(0,10),
-        session: (r.session||r.Session||r.Time||'').toUpperCase().replace('BEFORE MARKET OPEN','BMO').replace('AFTER MARKET CLOSE','AMC'),
-        price: r.price!=null? Number(r.price): (r.Price? Number(r.Price): null),
-        dollar_volume: r.dollar_volume!=null? Number(r.dollar_volume): (r.DollarVolume? Number(r.DollarVolume): null)
-      })).filter(x=> x.ticker && x.date);
-    }
-
-    el('#loadDemo').addEventListener('click', ()=>{ state.rows = normalizeRows(DEMO); render(); });
-
-    el('#file').addEventListener('change', async (e)=>{
-      const f = e.target.files?.[0]; if(!f) return;
-      const text = await f.text();
-      let rows=[];
-      try{
-        if(f.name.endsWith('.json')) rows = JSON.parse(text);
-        else rows = parseCSV(text);
-      }catch(err){ alert('Soubor se nepodařilo načíst: '+err.message); return; }
-      state.rows = normalizeRows(rows);
-      render();
-    });
-
-    // ====== Bindings ======
-    ['from','to','session','etoro','minPrice','minDollarVol'].forEach(id=>{
-      el('#'+id).addEventListener('input', render);
-      el('#'+id).addEventListener('change', render);
-    });
-    el('#reset').addEventListener('click', ()=>{
-      el('#from').value='2025-11-03'; el('#to').value='2025-11-14'; el('#session').value='all'; el('#etoro').value='off'; el('#minPrice').value='0'; el('#minDollarVol').value='0'; render();
-    });
-
-    const themeBtn = el('#themeBtn');
-    themeBtn.addEventListener('click', ()=>{ state.theme = state.theme==='dark'?'light':'dark'; localStorage.setItem('theme', state.theme); render(); });
-
-    // Init
-    (async function(){
-      await loadEtoro();
-      await loadAutoData(); // pokusí se načíst /data/earnings_2025-11-03_14.json (nebo ?src=...)
-      render();
-    })();
+    renderTable(earningsData);
   </script>
 </body>
 </html>

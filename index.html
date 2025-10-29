@@ -1,151 +1,63 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>US Earnings Calendar (FinancialModelingPrep)</title>
-<style>
-  body {
-    background-color: #0f1116;
-    color: #e0e0e0;
-    font-family: "Segoe UI", sans-serif;
-    margin: 0;
-    padding: 20px;
-  }
-  h2 {
-    color: #00ccff;
-    text-align: center;
-  }
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  input, button {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    font-size: 14px;
-  }
-  input[type="date"], input[type="text"] {
-    background-color: #1c1f26;
-    color: #fff;
-  }
-  button {
-    background-color: #00ccff;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #00a3cc;
-  }
-  table {
-    width: 90%;
-    margin: 0 auto;
-    border-collapse: collapse;
-    background-color: #1a1d24;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  th, td {
-    padding: 12px;
-    border-bottom: 1px solid #333;
-    text-align: left;
-  }
-  th {
-    background-color: #232731;
-    color: #00ccff;
-  }
-  tr:hover {
-    background-color: #2a2f3d;
-  }
-  #status {
-    text-align: center;
-    margin-top: 15px;
-    color: #aaa;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US Earnings Calendar (FinancialModelingPrep)</title>
+  <style>
+    body { background: #f7f9fc; font-family: Arial, sans-serif; color: #222; padding: 20px; }
+    h1 { color: #003366; }
+    label { margin-right: 8px; }
+    input, button { margin: 4px; padding: 6px 8px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #003366; color: white; }
+    tr:nth-child(even) { background: #eef3f8; }
+  </style>
 </head>
 <body>
-
-<h2>📊 US Earnings Calendar (FinancialModelingPrep)</h2>
-
-<div class="filters">
+  <h1>Přehled US Earnings (FinancialModelingPrep)</h1>
   <div>
-    <label>API klíč: <input type="text" id="apiKey" placeholder="Zadej svůj API klíč"></label>
+    <label for="apiKey">API klíč:</label>
+    <input type="text" id="apiKey" placeholder="vložit API klíč">
+    <label for="fromDate">Od:</label>
+    <input type="date" id="fromDate">
+    <label for="toDate">Do:</label>
+    <input type="date" id="toDate">
+    <button id="loadData">Načíst data</button>
   </div>
-  <div>
-    <label>Od: <input type="date" id="fromDate" value="2025-11-03"></label>
-  </div>
-  <div>
-    <label>Do: <input type="date" id="toDate" value="2025-11-14"></label>
-  </div>
-  <button id="loadBtn">Načíst data</button>
-</div>
 
-<table id="earningsTable">
-  <thead>
-    <tr>
-      <th>Ticker</th>
-      <th>Společnost</th>
-      <th>Datum</th>
-      <th>Seance</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <table id="earningsTable">
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Název společnosti</th>
+        <th>Datum uzávěrky</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<div id="status">Zadej API klíč a rozsah, poté klikni na „Načíst data“</div>
-
-<script>
-document.getElementById("loadBtn").addEventListener("click", async () => {
-  const apiKey = document.getElementById("apiKey").value.trim();
-  const from = document.getElementById("fromDate").value;
-  const to = document.getElementById("toDate").value;
-  const tbody = document.querySelector("#earningsTable tbody");
-  tbody.innerHTML = "";
-
-  if (!apiKey) {
-    document.getElementById("status").innerText = "❗ Zadej prosím svůj API klíč.";
-    return;
-  }
-
-  document.getElementById("status").innerText = "⏳ Načítám data z FMP...";
-
-  const url = `https://financialmodelingprep.com/api/v3/earning_calendar?from=${from}&to=${to}&apikey=${apiKey}`;
-
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Chyba při načítání dat");
-    const data = await res.json();
-
-    if (!Array.isArray(data) || data.length === 0) {
-      document.getElementById("status").innerText = "❌ Žádná data nenalezena.";
-      return;
-    }
-
-    data.forEach(item => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${item.symbol || "-"}</td>
-        <td>${item.company || "-"}</td>
-        <td>${item.date || "-"}</td>
-        <td>${item.time?.toUpperCase() || "-"}</td>
-      `;
-      tbody.appendChild(tr);
+  <script>
+    document.getElementById('loadData').addEventListener('click', async () => {
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const fromDate = document.getElementById('fromDate').value;
+      const toDate = document.getElementById('toDate').value;
+      if (!apiKey || !fromDate || !toDate) {
+        alert('Vyplň API klíč a datumy!');
+        return;
+      }
+      const url = `https://financialmodelingprep.com/api/v3/earning_calendar?from=${fromDate}&to=${toDate}&apikey=${apiKey}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const tbody = document.querySelector('#earningsTable tbody');
+      tbody.innerHTML = '';
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item.symbol}</td><td>${item.company}</td><td>${item.date}</td>`;
+        tbody.appendChild(tr);
+      });
     });
-
-    document.getElementById("status").innerText = `✅ Načteno ${data.length} firem.`;
-  } catch (err) {
-    console.error(err);
-    document.getElementById("status").innerText = "❌ Chyba při načítání dat.";
-  }
-});
-</script>
-
+  </script>
 </body>
 </html>

@@ -1,144 +1,167 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>US Earnings – Listopad 2025</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Arial, sans-serif;
-      margin: 40px;
-      background: #f5f7fa;
-      color: #222;
-    }
-    h1 {
-      color: #0055aa;
-      margin-bottom: 10px;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    th, td {
-      padding: 10px 14px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-    th {
-      background: #0055aa;
-      color: white;
-      font-weight: 600;
-    }
-    tr:hover {
-      background: #f0f6ff;
-    }
-    .filter-box {
-      margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    input[type="date"] {
-      padding: 6px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      background: #0055aa;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 14px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #003f7a;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>US Earnings (Yahoo Finance)</title>
+<style>
+  body {
+    background-color: #0f1116;
+    color: #e0e0e0;
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  h2 {
+    color: #00ccff;
+    text-align: center;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  input, button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
+  input[type="date"] {
+    background-color: #1c1f26;
+    color: #fff;
+  }
+  button {
+    background-color: #00ccff;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #00a3cc;
+  }
+  table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #1a1d24;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid #333;
+    text-align: left;
+  }
+  th {
+    background-color: #232731;
+    color: #00ccff;
+  }
+  tr:hover {
+    background-color: #2a2f3d;
+  }
+  #status {
+    text-align: center;
+    margin-top: 15px;
+    color: #aaa;
+  }
+</style>
 </head>
 <body>
-  <h1>📅 Přehled US Earnings (3.–14. listopadu 2025)</h1>
 
-  <div class="filter-box">
-    <label>Od:</label>
-    <input type="date" id="fromDate" value="2025-11-03">
-    <label>Do:</label>
-    <input type="date" id="toDate" value="2025-11-14">
-    <button onclick="filterData()">Filtrovat</button>
-    <button onclick="resetFilter()">Reset</button>
+<h2>📊 US Earnings (Yahoo Finance)</h2>
+
+<div class="filters">
+  <div>
+    <label>Od: <input type="date" id="fromDate" value="2025-11-03"></label>
   </div>
+  <div>
+    <label>Do: <input type="date" id="toDate" value="2025-11-14"></label>
+  </div>
+  <button id="loadBtn">Načíst data</button>
+</div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Ticker</th>
-        <th>Název společnosti</th>
-        <th>Datum uzávěrky</th>
-      </tr>
-    </thead>
-    <tbody id="earnings-table"></tbody>
-  </table>
+<table id="earningsTable">
+  <thead>
+    <tr>
+      <th>Ticker</th>
+      <th>Společnost</th>
+      <th>Datum</th>
+      <th>Seance</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
-  <script>
-    const earningsData = [
-      { ticker: "AAPL", name: "Apple Inc.", date: "2025-11-04" },
-      { ticker: "MSFT", name: "Microsoft Corporation", date: "2025-11-05" },
-      { ticker: "GOOGL", name: "Alphabet Inc.", date: "2025-11-07" },
-      { ticker: "AMZN", name: "Amazon.com Inc.", date: "2025-11-06" },
-      { ticker: "META", name: "Meta Platforms Inc.", date: "2025-11-08" },
-      { ticker: "TSLA", name: "Tesla Inc.", date: "2025-11-11" },
-      { ticker: "NVDA", name: "NVIDIA Corporation", date: "2025-11-10" },
-      { ticker: "NFLX", name: "Netflix Inc.", date: "2025-11-09" },
-      { ticker: "INTC", name: "Intel Corporation", date: "2025-11-05" },
-      { ticker: "AMD", name: "Advanced Micro Devices Inc.", date: "2025-11-12" },
-      { ticker: "PEP", name: "PepsiCo Inc.", date: "2025-11-03" },
-      { ticker: "KO", name: "Coca-Cola Company", date: "2025-11-04" },
-      { ticker: "DIS", name: "Walt Disney Company", date: "2025-11-08" },
-      { ticker: "CSCO", name: "Cisco Systems Inc.", date: "2025-11-06" },
-      { ticker: "BA", name: "Boeing Company", date: "2025-11-09" },
-      { ticker: "JPM", name: "JPMorgan Chase & Co.", date: "2025-11-05" },
-      { ticker: "V", name: "Visa Inc.", date: "2025-11-07" },
-      { ticker: "MA", name: "Mastercard Inc.", date: "2025-11-08" },
-      { ticker: "XOM", name: "ExxonMobil Corporation", date: "2025-11-03" },
-      { ticker: "WMT", name: "Walmart Inc.", date: "2025-11-10" }
-    ];
+<div id="status">Zadej rozsah a klikni na „Načíst data“</div>
 
-    const tbody = document.getElementById("earnings-table");
+<script>
+async function fetchEarningsForDay(dateStr) {
+  const url = `https://api.allorigins.win/raw?url=https://query2.finance.yahoo.com/v1/finance/calendar/earnings?day=${dateStr}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Chyba při načítání");
+    const data = await res.json();
+    const list = data.finance?.result || [];
+    return list.map(e => ({
+      ticker: e.symbol,
+      name: e.companyshortname,
+      date: e.startdatetime ? e.startdatetime.split("T")[0] : dateStr,
+      session: e.time?.includes("After") ? "AMC" : e.time?.includes("Before") ? "BMO" : "-"
+    }));
+  } catch (err) {
+    console.warn("Chyba pro den:", dateStr, err);
+    return [];
+  }
+}
 
-    function renderTable(data) {
-      tbody.innerHTML = "";
-      data.forEach(row => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${row.ticker}</td>
-            <td>${row.name}</td>
-            <td>${row.date}</td>
-          </tr>`;
-      });
-    }
+function getDateRange(start, end) {
+  const arr = [];
+  let d = new Date(start);
+  while (d <= new Date(end)) {
+    arr.push(d.toISOString().split("T")[0]);
+    d.setDate(d.getDate() + 1);
+  }
+  return arr;
+}
 
-    function filterData() {
-      const from = new Date(document.getElementById("fromDate").value);
-      const to = new Date(document.getElementById("toDate").value);
-      const filtered = earningsData.filter(e => {
-        const d = new Date(e.date);
-        return d >= from && d <= to;
-      });
-      renderTable(filtered);
-    }
+document.getElementById("loadBtn").addEventListener("click", async () => {
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+  const tbody = document.querySelector("#earningsTable tbody");
+  tbody.innerHTML = "";
+  document.getElementById("status").innerText = "⏳ Načítám data...";
+  
+  const days = getDateRange(from, to);
+  let all = [];
 
-    function resetFilter() {
-      document.getElementById("fromDate").value = "2025-11-03";
-      document.getElementById("toDate").value = "2025-11-14";
-      renderTable(earningsData);
-    }
+  for (const day of days) {
+    const results = await fetchEarningsForDay(day);
+    all = all.concat(results);
+  }
 
-    renderTable(earningsData);
-  </script>
+  if (all.length === 0) {
+    document.getElementById("status").innerText = "❌ Žádná data nenalezena v daném rozsahu.";
+    return;
+  }
+
+  all.forEach(item => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.ticker || "-"}</td>
+      <td>${item.name || "-"}</td>
+      <td>${item.date}</td>
+      <td>${item.session}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("status").innerText = `✅ Načteno ${all.length} titulů`;
+});
+</script>
+
 </body>
 </html>
